@@ -1,31 +1,30 @@
 const staticCacheName = 'CacheSpace1';
 
-
 const assetUrls = [
-'/icons',
-'/css/style.css',
-'/background',
-'/index. html',
-]
+  '/icons',
+  '/css/style.css',
+  '/background',
+  '/index.html',
+];
 
 self.addEventListener('install', async event => {
-  const cache = await caches.open(staticCacheName)
-  await cache.addAll(assetUrls)
-})
-
+  event.waitUntil(
+    caches.open(staticCacheName)
+      .then(cache => cache.addAll(assetUrls))
+  );
+});
 
 self.addEventListener('activate', event => {
-  console.log('[SW]: activate')
-})
+  console.log('[SW]: activate');
+});
 
-
-self.addEventListener ('fetch', event => {
-  console.log( 'Fetch', event.request.url)
-  event.respondWith(cacheFirst(event.request))
-})
-
+self.addEventListener('fetch', event => {
+  console.log('Fetch', event.request.url);
+  event.respondWith(cacheFirst(event.request));
+});
 
 async function cacheFirst(request) {
-  const cached = await caches.match(request)
-  return cached ?? await fetch(request)
+  const cache = await caches.open(staticCacheName);
+  const cached = await cache.match(request);
+  return cached ?? await fetch(request);
 }
