@@ -1,5 +1,4 @@
 const staticCacheName = 'CacheSpace1';
-
 const assetUrls = [
   '/icons',
   '/css/style.css',
@@ -9,8 +8,12 @@ const assetUrls = [
 
 self.addEventListener('install', async event => {
   event.waitUntil(
-    caches.open(staticCacheName)
-      .then(cache => cache.addAll(assetUrls))
+    caches.open(staticCacheName).then(cache => {
+      return cache.addAll(assetUrls).catch(error => {
+        console.error('Failed to cache:', error);
+        console.log('Asset URL causing issue:', error.message);
+      });
+    })
   );
 });
 
