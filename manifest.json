@@ -2,7 +2,7 @@
   "name": "Баскетбольный магазин",
   "description": "Уникальная одежда!",
   "short_name": "BBparadise",
-  "start_url": "/index.html",
+  "start_url": "index.html",
   "lang": "ru",
   "display": "standalone",
   "icons": [
