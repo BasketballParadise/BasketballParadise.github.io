@@ -6,14 +6,20 @@ const assetUrls = [
   '/index.html',
 ];
 
-self.addEventListener('install', async event => {
+self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(staticCacheName).then(cache => {
-      return cache.addAll(assetUrls).catch(error => {
-        console.error('Failed to cache:', error);
-        console.log('Asset URL causing issue:', error.message);
-      });
-    })
+    (async () => {
+      const cache = await caches.open(staticCacheName);
+      for (const url of assetUrls) {
+        try {
+          await cache.add(url);
+          console.log(Cached asset: ${url});
+        } catch (error) {
+          console.error(Failed to cache asset: ${url}, error);
+          throw error;  // Прервать установку Service Worker, если любой запрос не удался
+        }
+      }
+    })()
   );
 });
 
